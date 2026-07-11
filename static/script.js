@@ -83,6 +83,9 @@ let simulateOffline = false;
 let backgroundMode = "blur";
 let extractedBackgroundCache = {};
 
+let lastSpotifyProgress = 0;
+let lastSpotifyFetchTime = Date.now();
+
 
 // ---------- HELPER FUNCTIONS ----------
 function formatTime(seconds) {
@@ -371,6 +374,9 @@ async function fetchSpotifyTrack() {
 
     isPlaying = data.track.is_playing;
 
+    lastSpotifyProgress = data.track.progress;
+    lastSpotifyFetchTime = Date.now();
+
     updateDisplay();
   } catch (error) {
     console.error("Failed to fetch Spotify track:", error);
@@ -509,36 +515,20 @@ function updateMode(mode) {
 
 // ---------- SMOOTH LOCAL PROGRESS ----------
 function simulateProgress() {
-  // Do not move anything if nothing is playing
-  if (!isPlaying) {
+  if (!isPlaying || liveSpotifySong === null || isLocked) {
     updateDisplay();
     return;
   }
 
-  // Smooth progress for live Spotify song between backend refreshes
-  if (liveSpotifySong !== null && isSpotifyConnected && !isLocked) {
-    liveSpotifySong.progress++;
+  if (isSpotifyConnected) {
+    const elapsedSeconds = (Date.now() - lastSpotifyFetchTime) / 1000;
+    const estimatedProgress = lastSpotifyProgress + elapsedSeconds;
 
-    if (liveSpotifySong.progress > liveSpotifySong.duration) {
-      liveSpotifySong.progress = liveSpotifySong.duration;
-    }
+    liveSpotifySong.progress = Math.min(
+      estimatedProgress,
+      liveSpotifySong.duration
+    );
   }
-
-  // Fake songs are no longer shown automatically in real mode,
-  // but this remains for future dev/testing use.
-  if (liveSpotifySong === null && isSpotifyConnected && !isLocked) {
-    const fakeSong = songs[currentSongIndex];
-
-    currentProgress++;
-
-    if (currentProgress >= fakeSong.duration) {
-      currentProgress = 0;
-      currentSongIndex = (currentSongIndex + 1) % songs.length;
-    }
-  }
-
-  // Locked mode intentionally has no progress bar,
-  // so we do not advance lockedProgress visually.
 
   updateDisplay();
 }
@@ -627,4 +617,4 @@ colorBgBtn.addEventListener("click", function () {
 fetchSpotifyTrack();
 
 setInterval(fetchSpotifyTrack, 3000);
-setInterval(simulateProgress, 1000);
+setInterval(simulateProgress, 250);
