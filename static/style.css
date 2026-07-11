@@ -294,34 +294,66 @@ button.locked-active {
 /* Idle visual shown when Spotify is disconnected */
 .idle-visual {
   text-align: center;
-  opacity: 0.9;
+  position: relative;
+  z-index: 2;
 }
 
-.idle-character {
-  font-size: 58px;
-  animation: floatSearch 2.5s ease-in-out infinite;
+.pixel-orb {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.05)),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.85), transparent 22%);
+
+  box-shadow:
+    0 0 24px rgba(255, 255, 255, 0.18),
+    0 0 70px rgba(120, 120, 255, 0.18),
+    inset 0 0 18px rgba(255, 255, 255, 0.14);
+
+  image-rendering: pixelated;
+  animation: pixelFloat 2.8s ease-in-out infinite;
+}
+
+.pixel-icon {
+  font-size: 42px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(255, 255, 255, 0.45);
 }
 
 .idle-visual p {
-  margin-top: 12px;
-  font-size: 15px;
-  opacity: 0.75;
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.78;
+  letter-spacing: 0.02em;
 }
 
-/* Cute floating animation */
-@keyframes floatSearch {
+@keyframes pixelFloat {
   0% {
-    transform: translateY(0px) rotate(-2deg);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 
   50% {
-    transform: translateY(-10px) rotate(2deg);
+    transform: translateY(-8px) scale(1.04);
+    filter: blur(0.2px);
   }
 
   100% {
-    transform: translateY(0px) rotate(-2deg);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
+
+
 
 /* If display is paused, stop vinyl spinning */
 .display-card.paused .vinyl-record {

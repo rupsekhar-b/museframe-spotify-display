@@ -420,11 +420,21 @@ function updateDisplay() {
       idleText.textContent = "Waiting for playback...";
     }
 
-    displayCard.style.background = "linear-gradient(135deg, #111111, #292929)";
-    displayCard.style.backgroundSize = "cover";
-    displayCard.style.backgroundPosition = "center";
-    displayCard.style.backgroundRepeat = "no-repeat";
-    return;
+    if (!isLoggedIn) {
+      displayCard.style.background = `
+        radial-gradient(circle at 50% 35%, rgba(120, 120, 255, 0.22), transparent 34%),
+        linear-gradient(135deg, #090909, #1f1f2e)
+      `;
+    } else {
+      displayCard.style.background = `
+        radial-gradient(circle at 50% 35%, rgba(29, 185, 84, 0.18), transparent 34%),
+        linear-gradient(135deg, #0b0f0d, #1b2922)
+      `;
+  }
+  displayCard.style.backgroundSize = "cover";
+  displayCard.style.backgroundPosition = "center";
+  displayCard.style.backgroundRepeat = "no-repeat";
+  return;
   }
 
   // ---------- LIVE / LOCKED SONG SCREEN ----------
