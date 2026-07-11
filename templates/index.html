@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic page setup -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Spotify Display Prototype</title>
+
+  <!-- Connecting CSS file -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- Main app container -->
+  <main class="app">
+
+    <!-- This card simulates the physical display screen -->
+    <section class="display-card" id="displayCard">
+
+      <!-- Top status section: tells user whether display is live/locked -->
+      <div class="top-bar">
+        <span class="status-dot"></span>
+        <span id="statusText">Live Preview Mode</span>
+      </div>
+
+      <!-- Visual area contains album cover OR vinyl animation -->
+      <div class="visual-area">
+
+        <!-- Album mode display -->
+        <div class="album-wrapper" id="albumWrapper">
+          <img id="albumCover" src="" alt="Album cover" />
+        </div>
+
+        <!-- Vinyl mode display.
+             hidden class means it is not visible at first. -->
+        <div class="vinyl-wrapper hidden" id="vinylWrapper">
+          <div class="vinyl-record">
+            <img id="vinylCover" src="" alt="Vinyl center cover" />
+          </div>
+        </div>
+      </div>
+
+        <!-- Idle screen visual shown when Spotify is disconnected and no locked display is active -->
+        <div class="idle-visual hidden" id="idleVisual">
+            <div class="idle-character">🐱 🎧 🐶</div>
+            <p>Looking for your music...</p>
+        </div>
+
+      <!-- Song information section -->
+      <div class="song-info">
+        <h1 id="songTitle">Song Title</h1>
+        <p id="artistName">Artist Name</p>
+      </div>
+
+      <!-- Progress bar section -->
+      <div class="progress-section">
+
+        <!-- Current time and total duration -->
+        <div class="time-row">
+          <span id="currentTime">0:00</span>
+          <span id="totalTime">3:30</span>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+
+        <!-- Progress bar background and fill -->
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Developer controls for testing only -->
+    <section class="dev-panel">
+        <p class="dev-label">Prototype Controls</p>
+
+        <a href="/login" class="login-link">Login with Spotify</a>
+
+        <div class="controls">
+            <button id="albumModeBtn">Album Mode</button>
+            <button id="vinylModeBtn">Vinyl Mode</button>
+            <button id="playPauseBtn">Pause</button>
+            <button id="lockBtn">Lock Display</button>
+            <button id="nextSongBtn">Simulate Next Song</button>
+            <button id="connectBtn">Simulate Disconnect</button>
+        </div>
+  </section>
+
+  </main>
+
+  <!-- Connecting JavaScript file.
+       We place it at the end so HTML loads first. -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
