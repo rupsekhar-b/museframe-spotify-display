@@ -369,3 +369,28 @@ button.locked-active {
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
     0 10px 24px rgba(29, 185, 84, 0.28);
 }
+
+.auth-links {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+.login-link,
+.logout-link {
+  display: inline-block;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-link:hover,
+.logout-link:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
