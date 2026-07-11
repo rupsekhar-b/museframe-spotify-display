@@ -40,6 +40,7 @@ body {
   border-radius: 28px;
   padding: 28px 36px 34px;
   overflow: hidden;
+  isolation: isolate; 
   position: relative;
 
   background: linear-gradient(135deg, #292929, #111111);
@@ -81,8 +82,8 @@ body {
 
 /* Album cover image */
 .album-wrapper img {
-  width: 190px;
-  height: 190px;
+  width: 250px;
+  height: 250px;
 
   object-fit: cover;
   border-radius: 22px;
@@ -99,8 +100,8 @@ body {
 
 /* Vinyl record design */
 .vinyl-record {
-  width: 210px;
-  height: 210px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
 
   /* Multiple radial gradients create a vinyl-like look */
@@ -393,4 +394,16 @@ button.locked-active {
 .login-link:hover,
 .logout-link:hover {
   background: rgba(255, 255, 255, 0.22);
+}
+
+.visual-area {
+  position: relative;
+  z-index: 2;
+}
+
+.song-info,
+.progress-section,
+.top-bar {
+  position: relative;
+  z-index: 2;
 }

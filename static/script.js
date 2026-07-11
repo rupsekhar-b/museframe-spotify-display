@@ -28,6 +28,8 @@ const playPauseBtn = document.getElementById("playPauseBtn");
 const lockBtn = document.getElementById("lockBtn");
 const nextSongBtn = document.getElementById("nextSongBtn");
 const connectBtn = document.getElementById("connectBtn");
+const blurBgBtn = document.getElementById("blurBgBtn");
+const colorBgBtn = document.getElementById("colorBgBtn");
 
 
 // ---------- FAKE SONGS FOR DEV TESTING ----------
@@ -78,6 +80,9 @@ let lockedProgress = 0;
 // Used only for the prototype disconnect button
 let simulateOffline = false;
 
+let backgroundMode = "blur";
+let extractedBackgroundCache = {};
+
 
 // ---------- HELPER FUNCTIONS ----------
 function formatTime(seconds) {
@@ -103,6 +108,172 @@ function getMoodBackground(mood) {
 
   // Default background for real Spotify songs
   return "linear-gradient(135deg, #111111, #292929)";
+}
+
+function getAlbumArtBackground(coverUrl) {
+  if (!coverUrl) {
+    return "linear-gradient(135deg, #111111, #292929)";
+  }
+
+  return `
+    linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.72),
+      rgba(0, 0, 0, 0.46)
+    ),
+    url("${coverUrl}")
+  `;
+}
+
+function rgbToCss(color) {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
+}
+
+
+function darkenColor(color, amount = 0.45) {
+  return {
+    r: Math.round(color.r * amount),
+    g: Math.round(color.g * amount),
+    b: Math.round(color.b * amount)
+  };
+}
+
+
+function boostColor(color, amount = 1.2) {
+  return {
+    r: Math.min(255, Math.round(color.r * amount)),
+    g: Math.min(255, Math.round(color.g * amount)),
+    b: Math.min(255, Math.round(color.b * amount))
+  };
+}
+
+
+function getColorGradientBackground(color) {
+  const boosted = boostColor(color, 1.15);
+  const dark = darkenColor(color, 0.35);
+
+  return `
+    radial-gradient(
+      circle at 30% 20%,
+      ${rgbToCss(boosted)},
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      ${rgbToCss(dark)},
+      #090909
+    )
+  `;
+}
+
+
+function extractAverageColorFromImage(imageUrl) {
+  return new Promise((resolve) => {
+    if (!imageUrl) {
+      resolve({ r: 30, g: 30, b: 30 });
+      return;
+    }
+
+    // Use cached color if already extracted
+    if (extractedBackgroundCache[imageUrl]) {
+      resolve(extractedBackgroundCache[imageUrl]);
+      return;
+    }
+
+    const img = new Image();
+
+    // Important for canvas-based color extraction
+    img.crossOrigin = "anonymous";
+
+    img.onload = function () {
+      try {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        // Small size is enough and faster
+        canvas.width = 40;
+        canvas.height = 40;
+
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let count = 0;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          const red = pixels[i];
+          const green = pixels[i + 1];
+          const blue = pixels[i + 2];
+
+          // Ignore very dark and very bright pixels
+          const brightness = red + green + blue;
+
+          if (brightness < 45 || brightness > 720) {
+            continue;
+          }
+
+          r += red;
+          g += green;
+          b += blue;
+          count++;
+        }
+
+        if (count === 0) {
+          resolve({ r: 40, g: 40, b: 40 });
+          return;
+        }
+
+        const averageColor = {
+          r: Math.round(r / count),
+          g: Math.round(g / count),
+          b: Math.round(b / count)
+        };
+
+        extractedBackgroundCache[imageUrl] = averageColor;
+        resolve(averageColor);
+      } catch (error) {
+        console.error("Color extraction failed:", error);
+        resolve({ r: 35, g: 35, b: 35 });
+      }
+    };
+
+    img.onerror = function () {
+      resolve({ r: 35, g: 35, b: 35 });
+    };
+
+    img.src = imageUrl;
+  });
+}
+
+async function updateBackground(activeSong) {
+  if (!activeSong || !activeSong.cover) {
+    displayCard.style.background = "linear-gradient(135deg, #111111, #292929)";
+    displayCard.style.backgroundSize = "cover";
+    displayCard.style.backgroundPosition = "center";
+    displayCard.style.backgroundRepeat = "no-repeat";
+    return;
+  }
+
+  if (backgroundMode === "blur") {
+    displayCard.style.background = getAlbumArtBackground(activeSong.cover);
+    displayCard.style.backgroundSize = "cover";
+    displayCard.style.backgroundPosition = "center";
+    displayCard.style.backgroundRepeat = "no-repeat";
+    return;
+  }
+
+  if (backgroundMode === "color") {
+    const averageColor = await extractAverageColorFromImage(activeSong.cover);
+
+    displayCard.style.background = getColorGradientBackground(averageColor);
+    displayCard.style.backgroundSize = "cover";
+    displayCard.style.backgroundPosition = "center";
+    displayCard.style.backgroundRepeat = "no-repeat";
+  }
 }
 
 
@@ -250,6 +421,9 @@ function updateDisplay() {
     }
 
     displayCard.style.background = "linear-gradient(135deg, #111111, #292929)";
+    displayCard.style.backgroundSize = "cover";
+    displayCard.style.backgroundPosition = "center";
+    displayCard.style.backgroundRepeat = "no-repeat";
     return;
   }
 
@@ -265,7 +439,7 @@ function updateDisplay() {
   albumCover.alt = `${activeSong.title} album cover`;
   vinylCover.alt = `${activeSong.title} vinyl cover`;
 
-  displayCard.style.background = getMoodBackground(activeSong.mood);
+  updateBackground(activeSong);
 
   // Show correct visual mode
   if (currentMode === "album") {
@@ -307,6 +481,8 @@ function updateDisplay() {
   // Button states
   albumModeBtn.classList.toggle("active", currentMode === "album");
   vinylModeBtn.classList.toggle("active", currentMode === "vinyl");
+  blurBgBtn.classList.toggle("active", backgroundMode === "blur");
+  colorBgBtn.classList.toggle("active", backgroundMode === "color");
   lockBtn.classList.toggle("locked-active", isLocked);
 
   playPauseBtn.textContent = isPlaying ? "Pause" : "Resume";
@@ -422,6 +598,17 @@ connectBtn.addEventListener("click", function () {
     fetchSpotifyTrack();
   }
 
+  updateDisplay();
+});
+
+blurBgBtn.addEventListener("click", function () {
+  backgroundMode = "blur";
+  updateDisplay();
+});
+
+
+colorBgBtn.addEventListener("click", function () {
+  backgroundMode = "color";
   updateDisplay();
 });
 
