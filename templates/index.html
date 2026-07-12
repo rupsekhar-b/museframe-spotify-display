@@ -76,22 +76,48 @@
 
     <!-- Developer controls for testing only -->
     <section class="dev-panel">
-        <p class="dev-label">Prototype Controls</p>
+  <p class="dev-label">MuseFrame Controls</p>
 
-        <a href="/login" class="login-link">Login with Spotify</a>
-        <a href="/logout" class="logout-link">Logout</a>
+  <div class="control-group">
+    <span class="control-title">Connection</span>
+    <div class="control-row">
+      <a href="/login" class="login-link">Login with Spotify</a>
+      <a href="/logout" class="logout-link">Logout</a>
+    </div>
+  </div>
 
-        <div class="controls">
-            <button id="albumModeBtn">Album Mode</button>
-            <button id="vinylModeBtn">Vinyl Mode</button>
-            <button id="playPauseBtn">Pause</button>
-            <button id="lockBtn">Lock Display</button>
-            <button id="nextSongBtn">Simulate Next Song</button>
-            <button id="connectBtn">Simulate Disconnect</button>
-            <button id="blurBgBtn">Blurred Cover BG</button>
-            <button id="colorBgBtn">Color Gradient BG</button>
-        </div>
-  </section>
+  <div class="control-group">
+    <span class="control-title">Display Mode</span>
+    <div class="control-row">
+      <button id="albumModeBtn">Album</button>
+      <button id="vinylModeBtn">Vinyl</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class="control-title">Background Mode</span>
+    <div class="control-row">
+      <button id="blurBgBtn">Blurred Cover</button>
+      <button id="colorBgBtn">Color Gradient</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class="control-title">Frame Control</span>
+    <div class="control-row">
+      <button id="lockBtn">Lock Display</button>
+    </div>
+  </div>
+
+  <div class="control-group dev-tools">
+    <span class="control-title">Dev Tools</span>
+    <div class="control-row">
+      <button id="playPauseBtn">Simulate Pause</button>
+      <button id="nextSongBtn">Simulate Next Song</button>
+      <button id="connectBtn">Simulate Disconnect</button>
+    </div>
+  </div>
+</section>
 
   </main>
 
