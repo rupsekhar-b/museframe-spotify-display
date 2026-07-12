@@ -61,13 +61,21 @@ const songs = [
 ];
 
 
+// ---------- APP SETTINGS ----------
+const settings = {
+  defaultDisplayMode: "album",
+  defaultBackgroundMode: "blur",
+  spotifyRefreshMs: 3000,
+  progressUpdateMs: 250
+};
+
 // ---------- APP STATE ----------
 let liveSpotifySong = null;
 
 let currentSongIndex = 0;
 let currentProgress = 0;
 
-let currentMode = "album";
+let currentMode = settings.defaultDisplayMode;
 
 let isLoggedIn = false;
 let isSpotifyConnected = false;
@@ -80,7 +88,7 @@ let lockedProgress = 0;
 // Used only for the prototype disconnect button
 let simulateOffline = false;
 
-let backgroundMode = "blur";
+let backgroundMode = settings.defaultBackgroundMode;
 let extractedBackgroundCache = {};
 
 let lastSpotifyProgress = 0;
@@ -620,5 +628,5 @@ colorBgBtn.addEventListener("click", function () {
 // ---------- START APP ----------
 fetchSpotifyTrack();
 
-setInterval(fetchSpotifyTrack, 3000);
-setInterval(simulateProgress, 250);
+setInterval(fetchSpotifyTrack, settings.spotifyRefreshMs);
+setInterval(simulateProgress, settings.progressUpdateMs);
