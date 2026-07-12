@@ -89,8 +89,12 @@ let lastSpotifyFetchTime = Date.now();
 
 // ---------- HELPER FUNCTIONS ----------
 function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
+  // Progress can become decimal because of smooth animation.
+  // We floor it so the UI shows clean time like 2:16, not 2:16.482.
+  const cleanSeconds = Math.floor(seconds);
+
+  const mins = Math.floor(cleanSeconds / 60);
+  const secs = cleanSeconds % 60;
 
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
