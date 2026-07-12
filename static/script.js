@@ -31,6 +31,8 @@ const connectBtn = document.getElementById("connectBtn");
 const blurBgBtn = document.getElementById("blurBgBtn");
 const colorBgBtn = document.getElementById("colorBgBtn");
 
+const frameViewBtn = document.getElementById("frameViewBtn");
+
 
 // ---------- FAKE SONGS FOR DEV TESTING ----------
 const songs = [
@@ -622,6 +624,16 @@ blurBgBtn.addEventListener("click", function () {
 colorBgBtn.addEventListener("click", function () {
   backgroundMode = "color";
   updateDisplay();
+});
+
+frameViewBtn.addEventListener("click", function () {
+  document.body.classList.add("frame-view");
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    document.body.classList.remove("frame-view");
+  }
 });
 
 

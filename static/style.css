@@ -466,3 +466,19 @@ button.locked-active {
   position: relative;
   z-index: 2;
 }
+
+body.frame-view .dev-panel {
+  display: none;
+}
+
+body.frame-view .app {
+  padding: 0;
+  gap: 0;
+}
+
+body.frame-view .display-card {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
