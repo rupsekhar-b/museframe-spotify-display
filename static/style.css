@@ -626,3 +626,143 @@ body.frame-view .display-card {
   transform: translateY(10px);
   filter: blur(4px);
 }
+
+/* ===============================
+   Responsive Frame Layout
+   =============================== */
+
+@media (max-width: 900px) {
+  .display-card {
+    width: min(92vw, 760px);
+    height: min(80vh, 460px);
+    padding: 26px;
+  }
+
+  .vinyl-record {
+    width: 240px;
+    height: 240px;
+  }
+
+  .vinyl-cover {
+    width: 88px;
+    height: 88px;
+  }
+
+  .album-cover {
+    width: 230px;
+    height: 230px;
+  }
+
+  .song-title {
+    font-size: 34px;
+  }
+
+  .artist-name {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 620px) {
+  .app {
+    padding: 18px;
+  }
+
+  .display-card {
+    width: 94vw;
+    height: 78vh;
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .top-bar {
+    font-size: 13px;
+  }
+
+  .visual-area {
+    min-height: 240px;
+  }
+
+  .vinyl-record {
+    width: 210px;
+    height: 210px;
+  }
+
+  .vinyl-cover {
+    width: 76px;
+    height: 76px;
+  }
+
+  .album-cover {
+    width: 210px;
+    height: 210px;
+  }
+
+  .song-title {
+    font-size: 28px;
+  }
+
+  .artist-name {
+    font-size: 17px;
+  }
+
+  .progress-section {
+    width: 88%;
+  }
+}
+
+@media (orientation: portrait) {
+  body.frame-view .display-card {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  body.frame-view .visual-area {
+    min-height: 42vh;
+  }
+
+  body.frame-view .vinyl-record {
+    width: min(72vw, 340px);
+    height: min(72vw, 340px);
+  }
+
+  body.frame-view .vinyl-cover {
+    width: min(26vw, 120px);
+    height: min(26vw, 120px);
+  }
+
+  body.frame-view .album-cover {
+    width: min(72vw, 340px);
+    height: min(72vw, 340px);
+  }
+
+  body.frame-view .song-title {
+    font-size: clamp(30px, 8vw, 54px);
+  }
+
+  body.frame-view .artist-name {
+    font-size: clamp(17px, 4vw, 26px);
+  }
+}
+
+@media (orientation: landscape) {
+  body.frame-view .display-card {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  body.frame-view .vinyl-record {
+    width: min(42vh, 360px);
+    height: min(42vh, 360px);
+  }
+
+  body.frame-view .vinyl-cover {
+    width: min(15vh, 125px);
+    height: min(15vh, 125px);
+  }
+
+  body.frame-view .album-cover {
+    width: min(42vh, 360px);
+    height: min(42vh, 360px);
+  }
+}
+
