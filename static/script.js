@@ -96,6 +96,9 @@ let extractedBackgroundCache = {};
 let lastSpotifyProgress = 0;
 let lastSpotifyFetchTime = Date.now();
 
+let lastRenderedSongId = null;
+let isChangingSong = false;
+
 
 // ---------- HELPER FUNCTIONS ----------
 function formatTime(seconds) {
@@ -107,6 +110,29 @@ function formatTime(seconds) {
   const secs = cleanSeconds % 60;
 
   return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+function getSongId(song) {
+  if (!song) {
+    return null;
+  }
+
+  return `${song.title}-${song.artist}`;
+}
+
+function triggerSongChangeAnimation() {
+  if (isChangingSong) {
+    return;
+  }
+
+  isChangingSong = true;
+
+  displayCard.classList.add("song-changing");
+
+  setTimeout(function () {
+    displayCard.classList.remove("song-changing");
+    isChangingSong = false;
+  }, 550);
 }
 
 
@@ -410,6 +436,16 @@ async function fetchSpotifyTrack() {
 // ---------- DISPLAY UPDATE ----------
 function updateDisplay() {
   const activeSong = getActiveSong();
+
+  const activeSongId = getSongId(activeSong);
+
+if (activeSongId && lastRenderedSongId && activeSongId !== lastRenderedSongId) {
+  triggerSongChangeAnimation();
+}
+
+if (activeSongId) {
+  lastRenderedSongId = activeSongId;
+}
 
   // Reset classes
   displayCard.classList.toggle("locked", isLocked);
